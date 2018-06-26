@@ -204,7 +204,6 @@ class Fluid {
     applyRigid() {
         for (let r of this._rigids) {
             let forceSum = new Vec2(0, 0);
-            let torque = new Vec2(0, 0);
             if (r.selected) {
                 for (const p of r.particles) {
                     p.force = forceSum;

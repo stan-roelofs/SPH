@@ -12,6 +12,12 @@ canvas {
     width: 512px;
 }
 
+#footer {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+}
+
 .slidecontainer {
     margin-left: 100px;
     flex-grow: 1;
