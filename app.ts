@@ -40,6 +40,11 @@
 
 window.onload = () => {
     const canvas = document.getElementById("cnvs") as HTMLCanvasElement;
+    const log = document.getElementById("console") as HTMLDivElement;
+
+    print("Press 1-9 to select presets");
+    print("Press space to pause");
+    print("Press n and m to decrease/increase the mass of rigid bodies");
 
     const height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
     const width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
@@ -145,4 +150,8 @@ window.onload = () => {
         requestAnimationFrame(loop);
     }
     requestAnimationFrame(loop);
+
+    function print(text: string) {
+        log.innerHTML += text + "<BR>";
+    }
 };

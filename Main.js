@@ -1,91 +1,3 @@
-class Solver {
-    static derivEval(particles) {
-        const temp = [];
-        for (const p of particles) {
-            temp.push(p.vel);
-            const massVec = new Vec2(p.density, p.density);
-            temp.push(p.force.divide(massVec).scale(-1));
-        }
-        return temp;
-    }
-    static getState(particles) {
-        const temp = [];
-        for (const p of particles) {
-            temp.push(p.pos);
-            temp.push(p.vel);
-        }
-        return temp;
-    }
-    static setState(particles, src) {
-        for (let i = 0; i < particles.length; i++) {
-            particles[i].oldPos = particles[i].pos;
-            particles[i].oldVel = particles[i].vel;
-            particles[i].oldAcc = particles[i].force.divide(new Vec2(particles[i].density, particles[i].density)).scale(-1);
-            particles[i].pos = src[2 * i];
-            particles[i].vel = src[2 * i + 1];
-        }
-    }
-    static clearForces(particles) {
-        for (const p of particles) {
-            p.force.x = 0;
-            p.force.y = 0;
-        }
-    }
-    static applyForces(particles, forces) {
-        // Calculate densities and pressures
-        for (const p of particles) {
-            let density = 0;
-            for (const p2 of particles) {
-                density += p2.mass * Poly6.W(p.pos.subtract(p2.pos));
-            }
-            p.density = density;
-            p.pressure = Constants.STIFFNESS * (density - Constants.REST_DENSITY);
-        }
-        for (const f of forces) {
-            f.apply();
-        }
-    }
-    static scaleList(list, factor) {
-        let result = [];
-        for (const entry of list) {
-            result.push(entry.scale(factor));
-        }
-        return result;
-    }
-    static addLists(list1, list2) {
-        let result = [];
-        for (let i = 0; i < list1.length; i++) {
-            result.push(new Vec2(list1[i].x + list2[i].x, list1[i].y + list2[i].y));
-        }
-        return result;
-    }
-}
-///<reference path="Solver.ts"/>
-class EulerSolver extends Solver {
-    step(particles, forces, dt) {
-        Solver.clearForces(particles);
-        Solver.applyForces(particles, forces);
-        const temp1 = Solver.derivEval(particles);
-        const temp2 = EulerSolver.scaleList(temp1, dt);
-        const temp3 = Solver.getState(particles);
-        const temp4 = EulerSolver.addLists(temp2, temp3);
-        EulerSolver.setState(particles, temp4);
-        for (let p of particles) {
-            if (p.pos.y > 512) {
-                p.pos.y = 512;
-                p.vel.y *= -0.7;
-            }
-            if (p.pos.x < 0) {
-                p.pos.x = 0;
-                p.vel.x *= -0.7;
-            }
-            if (p.pos.x > 512) {
-                p.pos.x = 512;
-                p.vel.x *= -0.7;
-            }
-        }
-    }
-}
 class Fluid {
     constructor() {
         this._particles = [];
@@ -515,38 +427,6 @@ class RigidBody {
         }
     }
 }
-class Simulation {
-    get particles() {
-        return this._particles;
-    }
-    set height(value) {
-        this._height = value;
-    }
-    set width(value) {
-        this._width = value;
-    }
-    constructor(w, h) {
-        this._particles = [];
-        this.forces = [];
-        this._width = w;
-        this._height = h;
-        this._solver = new LeapFrog();
-    }
-    addParticle(x, y) {
-        this._particles.push(new Particle(x, y));
-    }
-    addForce(force) {
-        this.forces.push(force);
-    }
-    step() {
-        this._solver.step(this._particles, this.forces, Constants.TIMESTEP);
-    }
-    draw(ctx) {
-        for (const p of this._particles) {
-            p.draw(ctx);
-        }
-    }
-}
 class SolidBody {
     get particles() {
         return this._particles;
@@ -674,6 +554,10 @@ class ViscosityForce extends Force {
 */
 window.onload = () => {
     const canvas = document.getElementById("cnvs");
+    const log = document.getElementById("console");
+    print("Press 1-9 to select presets");
+    print("Press space to pause");
+    print("Press n and m to decrease/increase the mass of rigid bodies");
     const height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
     const width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
     canvas.height = 512;
@@ -763,5 +647,8 @@ window.onload = () => {
         requestAnimationFrame(loop);
     }
     requestAnimationFrame(loop);
+    function print(text) {
+        log.innerHTML += text + "<BR>";
+    }
 };
 //# sourceMappingURL=Main.js.map
