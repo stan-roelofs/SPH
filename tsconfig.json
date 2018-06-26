@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "module": "amd",
+    "target": "es6",
+    "sourceMap": true,
+    "outFile": "Main.js"
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}
