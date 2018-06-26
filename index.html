@@ -7,7 +7,20 @@
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-<canvas id="cnvs"></canvas>
+<div class="container">
+    <canvas id="cnvs"></canvas>
+
+    <div class="slidecontainer">
+        Kernel range:
+        <input type="range" min="5" max="30" value="16" class="slider" id="sliderH">
+        <div id="sliderHVal"></div>
+        Particle mass:
+        <input type="range" min="5" max="100" value="65" class="slider" id="sliderMass">
+        <div id="sliderMassVal"></div>
+    </div>
+</div>
+
 <div id="console"></div>
+
 </body>
 </html>

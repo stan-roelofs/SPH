@@ -1,26 +1,34 @@
 class Fluid {
-    constructor() {
-        this._particles = [];
-        this._forces = [];
-        this._rigids = [];
-        this._solids = [];
-        // Physical attrs
-        this.numParticles = 250;
-        this.viscosity = 500 * 5;
-        this.particleMass = 500 * .13;
-        this.h = 18;
-        this.k = 400 * 5;
-        this.restDensity = 998;
-        this.gravityConst = 120000 * 9.82;
-        this.dt = 0.0004;
-        this._particles = [];
-        this.initWater();
+    get mass() {
+        return this._mass;
+    }
+    set mass(value) {
+        this._mass = value;
+    }
+    get h() {
+        return this._h;
+    }
+    set h(value) {
+        this._h = value;
     }
     get rigids() {
         return this._rigids;
     }
     get particles() {
         return this._particles;
+    }
+    constructor() {
+        // Physical attrs
+        this.numParticles = 250;
+        this.viscosity = 500 * 5;
+        this._mass = 500 * .13;
+        this._h = 18;
+        this.k = 400 * 5;
+        this.restDensity = 998;
+        this.gravityConst = 120000 * 9.82;
+        this.dt = 0.0004;
+        this.clear();
+        this.initWater();
     }
     clear() {
         this._particles = [];
@@ -41,21 +49,21 @@ class Fluid {
                 j = 0;
             }
             j++;
-            this._particles.push(new Particle(100 + j * this.h / 2, 300 + k * this.h / 2, this.particleMass));
+            this._particles.push(new Particle(100 + j * this._h / 2, 300 + k * this._h / 2, this._mass));
         }
         let temp = [];
         for (k = 0; k < 100; k++) {
-            let p = new Particle(10 + 5 * k, 10, this.particleMass);
+            let p = new Particle(10 + 5 * k, 10, this._mass);
             this._particles.push(p);
             temp.push(p);
         }
         for (k = 0; k < 50; k++) {
-            let p = new Particle(10, 10 + 10 * k, this.particleMass);
+            let p = new Particle(10, 10 + 10 * k, this._mass);
             this._particles.push(p);
             temp.push(p);
         }
         for (k = 0; k < 50; k++) {
-            let p = new Particle(500, 10 + 10 * k, this.particleMass);
+            let p = new Particle(500, 10 + 10 * k, this._mass);
             this._particles.push(p);
             temp.push(p);
         }
@@ -78,33 +86,33 @@ class Fluid {
                 j = 0;
             }
             j++;
-            this._particles.push(new Particle(50 + 2 * j * this.h / 2, 450 + 2 * k * this.h / 2, this.particleMass));
+            this._particles.push(new Particle(50 + 2 * j * this._h / 2, 450 + 2 * k * this._h / 2, this._mass));
         }
         let temp = [];
         for (k = 0; k < 50; k++) {
-            let p = new Particle(10 + 10 * k, 10, this.particleMass);
+            let p = new Particle(10 + 10 * k, 10, this._mass);
             this._particles.push(p);
             temp.push(p);
         }
         for (k = 0; k < 50; k++) {
-            let p = new Particle(10, 10 + 10 * k, this.particleMass);
+            let p = new Particle(10, 10 + 10 * k, this._mass);
             this._particles.push(p);
             temp.push(p);
         }
         for (k = 0; k < 50; k++) {
-            let p = new Particle(500, 10 + 10 * k, this.particleMass);
+            let p = new Particle(500, 10 + 10 * k, this._mass);
             this._particles.push(p);
             temp.push(p);
         }
         this._solids.push(new SolidBody(temp));
         temp = [];
         for (let i = 0; i < 46; i++) {
-            let p = new Particle(5 * i, 500 - 5 * i, this.particleMass);
+            let p = new Particle(5 * i, 500 - 5 * i, this._mass);
             this._particles.push(p);
             temp.push(p);
         }
         for (let i = 0; i < 46; i++) {
-            let p = new Particle(512 - 5 * i, 500 - 5 * i, this.particleMass);
+            let p = new Particle(512 - 5 * i, 500 - 5 * i, this._mass);
             this._particles.push(p);
             temp.push(p);
         }
@@ -143,28 +151,28 @@ class Fluid {
                 j = 0;
             }
             j++;
-            this._particles.push(new Particle(100 + k * this.h / 1.3, 256 + j * this.h / 1.3, this.particleMass));
+            this._particles.push(new Particle(100 + k * this._h / 1.3, 256 + j * this._h / 1.3, this._mass));
         }
         let temp = [];
         for (k = 0; k < 50; k++) {
-            let p = new Particle(10 + 10 * k, 10, this.particleMass);
+            let p = new Particle(10 + 10 * k, 10, this._mass);
             this._particles.push(p);
             temp.push(p);
         }
         for (k = 0; k < 50; k++) {
-            let p = new Particle(10, 10 + 10 * k, this.particleMass);
+            let p = new Particle(10, 10 + 10 * k, this._mass);
             this._particles.push(p);
             temp.push(p);
         }
         for (k = 0; k < 50; k++) {
-            let p = new Particle(500, 10 + 10 * k, this.particleMass);
+            let p = new Particle(500, 10 + 10 * k, this._mass);
             this._particles.push(p);
             temp.push(p);
         }
         this._solids.push(new SolidBody(temp));
         temp = [];
         for (let i = 0; i < Math.PI * 2; i += Math.PI / 5) { // Does this make any sense ? :-)
-            let p = new Particle(300 + Math.cos(i) * 20, 400 + Math.sin(i) * 20, this.particleMass);
+            let p = new Particle(300 + Math.cos(i) * 20, 400 + Math.sin(i) * 20, this._mass);
             this._particles.push(p);
             temp.push(p);
         }
@@ -180,7 +188,7 @@ class Fluid {
             let density = 0;
             for (let j = 0; j < this._particles.length; j++) {
                 let diffVec = this._particles[i].pos.subtract(this._particles[j].pos);
-                density += this.particles[j].mass * Poly6.W(diffVec, this.h);
+                density += this.particles[j].mass * Poly6.W(diffVec, this._h);
             }
             if (!this._particles[i].rigid && !this._particles[i].solid) {
                 this._particles[i].density = density;
@@ -190,7 +198,7 @@ class Fluid {
             this._particles[i].force.y = 0;
         }
         for (let f of this._forces) {
-            f.apply(this.h);
+            f.apply(this._h);
         }
     }
     applyRigid() {
@@ -214,7 +222,6 @@ class Fluid {
             }
         }
     }
-    // Leapfrog
     step() {
         this.applyForces();
         this.applyRigid();
@@ -513,51 +520,17 @@ class ViscosityForce extends Force {
     draw() {
     }
 }
-/*window.onload = () => {
-    const canvas = document.getElementById("cnvs") as HTMLCanvasElement;
-
-    const height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-    const width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-    canvas.height = 512;
-    canvas.width = 512;
-
-    const ctx = canvas.getContext("2d");
-
-    const sim = new Simulation(width, height);
-
-    let j = 0;
-    let k = 0;
-    for (let i = 0; i < Constants.NUMBER_PARTICLES; i++) {
-        if (i % 40 == 0) {
-            k++;
-            j = 0;
-        }
-        j++;
-
-        sim.addParticle(100 + j * Constants.KERNEL_RANGE / 2, 250 + k * Constants.KERNEL_RANGE / 2);
-    }
-
-    sim.addForce(new LinearForce(sim.particles, new Vec2(0, Constants.GRAVITY)));
-    sim.addForce(new PressureForce(sim.particles));
-    //sim.addForce(new ViscosityForce(sim.particles));
-
-    function loop(): void {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = "rgba(255, 255, 255, 1)";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        sim.step();
-        sim.draw(ctx);
-        requestAnimationFrame(loop);
-    }
-    requestAnimationFrame(loop);
-};
-*/
 window.onload = () => {
     const canvas = document.getElementById("cnvs");
     const log = document.getElementById("console");
+    const sliderH = document.getElementById("sliderH");
+    const sliderHVal = document.getElementById("sliderHVal");
+    const sliderMass = document.getElementById("sliderMass");
+    const sliderMassVal = document.getElementById("sliderMassVal");
     print("Press 1-9 to select presets");
     print("Press space to pause");
     print("Press n and m to decrease/increase the mass of rigid bodies");
+    print("Click and drag rigid bodies to move them");
     const height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
     const width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
     canvas.height = 512;
@@ -634,6 +607,7 @@ window.onload = () => {
     };
     // Start rendering loop
     function loop() {
+        updateOptions();
         if (!pause) {
             fluid.step(); // If paused only draw, don't step
         }
@@ -647,8 +621,18 @@ window.onload = () => {
         requestAnimationFrame(loop);
     }
     requestAnimationFrame(loop);
+    function updateOptions() {
+        sliderHVal.innerHTML = fluid.h.toString();
+        sliderMassVal.innerHTML = fluid.mass.toString();
+    }
     function print(text) {
         log.innerHTML += text + "<BR>";
     }
+    sliderH.oninput = function () {
+        fluid.h = parseInt(sliderH.value);
+    };
+    sliderMass.oninput = function () {
+        fluid.mass = parseInt(sliderMass.value);
+    };
 };
 //# sourceMappingURL=Main.js.map

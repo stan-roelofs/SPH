@@ -1,36 +1,49 @@
 class Fluid {
+    get mass(): number {
+        return this._mass;
+    }
+
+    set mass(value: number) {
+        this._mass = value;
+    }
+    get h(): number {
+        return this._h;
+    }
+    set h(value: number) {
+        this._h = value;
+    }
     get rigids(): RigidBody[] {
         return this._rigids;
     }
     get particles(): Particle[] {
         return this._particles;
     }
-    particleMass: number;
+
+    private _mass: number;
     private numParticles: number;
     private viscosity: number;
-    private h: number;
+    private _h: number;
     private k: number;
     private restDensity: number;
     private gravityConst: number;
     private dt: number;
-    private _particles: Particle[] = [];
-    private _forces: Force[] = [];
-    private _rigids: RigidBody[] = [];
-    private _solids: SolidBody[] = [];
+    private _particles: Particle[];
+    private _forces: Force[];
+    private _rigids: RigidBody[];
+    private _solids: SolidBody[];
 
     constructor() {
         // Physical attrs
         this.numParticles = 250;
         this.viscosity = 500 * 5;
-        this.particleMass = 500 * .13;
-        this.h = 18;
+        this._mass = 500 * .13;
+        this._h = 18;
         this.k = 400 * 5;
         this.restDensity = 998;
         this.gravityConst = 120000 * 9.82;
         this.dt = 0.0004;
 
-        this._particles = [];
-
+        this.clear();
         this.initWater();
     }
 
@@ -57,22 +70,22 @@ class Fluid {
             }
             j++;
 
-            this._particles.push(new Particle(100 + j * this.h / 2, 300 + k * this.h / 2, this.particleMass));
+            this._particles.push(new Particle(100 + j * this._h / 2, 300 + k * this._h / 2, this._mass));
         }
 
         let temp: Particle[] = [];
         for (k = 0; k < 100; k++) {
-            let p = new Particle(10 + 5 * k, 10, this.particleMass);
+            let p = new Particle(10 + 5 * k, 10, this._mass);
             this._particles.push(p);
             temp.push(p);
         }
         for (k = 0; k < 50; k++) {
-            let p = new Particle(10, 10 + 10 * k, this.particleMass);
+            let p = new Particle(10, 10 + 10 * k, this._mass);
             this._particles.push(p);
             temp.push(p);
         }
         for (k = 0; k < 50; k++) {
-            let p = new Particle(500, 10 + 10 * k, this.particleMass);
+            let p = new Particle(500, 10 + 10 * k, this._mass);
             this._particles.push(p);
             temp.push(p);
         }
@@ -101,22 +114,22 @@ class Fluid {
             }
             j++;
 
-            this._particles.push(new Particle(50 + 2*j * this.h / 2, 450 + 2 * k * this.h / 2, this.particleMass));
+            this._particles.push(new Particle(50 + 2*j * this._h / 2, 450 + 2 * k * this._h / 2, this._mass));
         }
 
         let temp: Particle[] = [];
         for (k = 0; k < 50; k++) {
-            let p = new Particle(10 + 10 * k, 10, this.particleMass);
+            let p = new Particle(10 + 10 * k, 10, this._mass);
             this._particles.push(p);
             temp.push(p);
         }
         for (k = 0; k < 50; k++) {
-            let p = new Particle(10, 10 + 10 * k, this.particleMass);
+            let p = new Particle(10, 10 + 10 * k, this._mass);
             this._particles.push(p);
             temp.push(p);
         }
         for (k = 0; k < 50; k++) {
-            let p = new Particle(500, 10 + 10 * k, this.particleMass);
+            let p = new Particle(500, 10 + 10 * k, this._mass);
             this._particles.push(p);
             temp.push(p);
         }
@@ -124,12 +137,12 @@ class Fluid {
 
         temp = [];
         for (let i = 0; i < 46; i++) {
-            let p = new Particle(5 * i, 500 - 5 * i, this.particleMass);
+            let p = new Particle(5 * i, 500 - 5 * i, this._mass);
             this._particles.push(p);
             temp.push(p);
         }
         for (let i = 0; i < 46; i++) {
-            let p = new Particle(512 - 5 * i, 500 - 5 * i, this.particleMass) ;
+            let p = new Particle(512 - 5 * i, 500 - 5 * i, this._mass) ;
             this._particles.push(p);
             temp.push(p);
         }
@@ -173,22 +186,22 @@ class Fluid {
             }
             j++;
 
-            this._particles.push(new Particle(100 + k * this.h / 1.3, 256 + j * this.h / 1.3, this.particleMass));
+            this._particles.push(new Particle(100 + k * this._h / 1.3, 256 + j * this._h / 1.3, this._mass));
         }
 
         let temp: Particle[] = [];
         for (k = 0; k < 50; k++) {
-            let p = new Particle(10 + 10 * k, 10, this.particleMass);
+            let p = new Particle(10 + 10 * k, 10, this._mass);
             this._particles.push(p);
             temp.push(p);
         }
         for (k = 0; k < 50; k++) {
-            let p = new Particle(10, 10 + 10 * k, this.particleMass);
+            let p = new Particle(10, 10 + 10 * k, this._mass);
             this._particles.push(p);
             temp.push(p);
         }
         for (k = 0; k < 50; k++) {
-            let p = new Particle(500, 10 + 10 * k, this.particleMass);
+            let p = new Particle(500, 10 + 10 * k, this._mass);
             this._particles.push(p);
             temp.push(p);
         }
@@ -196,7 +209,7 @@ class Fluid {
 
         temp = [];
         for (let i = 0; i < Math.PI * 2; i += Math.PI / 5) { // Does this make any sense ? :-)
-            let p = new Particle(300 + Math.cos(i) * 20, 400 + Math.sin(i) * 20, this.particleMass);
+            let p = new Particle(300 + Math.cos(i) * 20, 400 + Math.sin(i) * 20, this._mass);
             this._particles.push(p);
             temp.push(p);
         }
@@ -216,7 +229,7 @@ class Fluid {
 
             for (let j = 0 ; j < this._particles.length; j++) {
                 let diffVec = this._particles[i].pos.subtract(this._particles[j].pos);
-                density += this.particles[j].mass * Poly6.W(diffVec, this.h);
+                density += this.particles[j].mass * Poly6.W(diffVec, this._h);
             }
 
             if (!this._particles[i].rigid && !this._particles[i].solid) {
@@ -228,7 +241,7 @@ class Fluid {
         }
 
         for (let f of this._forces) {
-            f.apply(this.h);
+            f.apply(this._h);
         }
     }
 
@@ -259,7 +272,6 @@ class Fluid {
         }
     }
 
-    // Leapfrog
     step() {
         this.applyForces();
         this.applyRigid();
